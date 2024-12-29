@@ -24,8 +24,9 @@ class CourseSchemaOut(Schema):
 class CourseMemberOut(Schema):
     id: int 
     course_id: CourseSchemaOut
+    user_id: UserOut
     roles: str
-    created_at: datetime
+    # created_at: datetime
 
 
 class CourseSchemaIn(Schema):
@@ -38,7 +39,7 @@ class CourseContentMini(Schema):
     id: int
     name: str
     description: str
-    course_id: int
+    course_id: CourseSchemaOut
     created_at: datetime
     updated_at: datetime
 
@@ -49,18 +50,17 @@ class CourseContentFull(Schema):
     description: str
     video_url: Optional[str]
     file_attachment: Optional[str]
-    course_id: int
+    course_id: CourseSchemaOut
     created_at: datetime
     updated_at: datetime
 
 class CourseCommentOut(Schema):
     id: int
-    content_id: int
-    user_id: UserOut
+    content_id: CourseContentMini
+    member_id: CourseMemberOut
+    comment: str
     created_at: datetime
     updated_at: datetime
 
 class CourseCommentIn(Schema):
-    content_id: int
-    user_id: int
     comment: str

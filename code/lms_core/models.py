@@ -36,7 +36,7 @@ class CourseMember(models.Model):
         verbose_name_plural = "Subscriber Matkul"
 
     def __str__(self) -> str:
-        return self.course_id+" : "+self.user_id
+        return f"{self.id} {self.course_id} : {self.user_id}"
 
 class CourseContent(models.Model):
     name = models.CharField("judul konten", max_length=200)
@@ -54,7 +54,7 @@ class CourseContent(models.Model):
         verbose_name_plural = "Konten Matkul"
 
     def __str__(self) -> str:
-        return '['+self.course_id+"] "+self.name
+        return f'{self.course_id} {self.name}'
 
 
 class Comment(models.Model):
@@ -69,4 +69,4 @@ class Comment(models.Model):
         verbose_name_plural = "Komentar"
 
     def __str__(self) -> str:
-        return "Komen: "+self.content_id.name+"-"+self.user_id
+        return "Komen: "+self.member_id.user_id+"-"+self.comment
