@@ -16,17 +16,10 @@ class CourseSchemaOut(Schema):
     name: str
     description: str
     price: int
-    image : Optional[str]
+    image: Optional[str]
     teacher: UserOut
     created_at: datetime
     updated_at: datetime
-
-class CourseMemberOut(Schema):
-    id: int 
-    course_id: CourseSchemaOut
-    user_id: UserOut
-    roles: str
-    # created_at: datetime
 
 
 class CourseSchemaIn(Schema):
@@ -35,32 +28,30 @@ class CourseSchemaIn(Schema):
     price: int
 
 
+class CourseMemberOut(Schema):
+    id: int
+    course_id: CourseSchemaOut
+    user_id: UserOut
+    roles: str
+
+
 class CourseContentMini(Schema):
     id: int
     name: str
-    description: str
-    course_id: CourseSchemaOut
-    created_at: datetime
-    updated_at: datetime
 
 
 class CourseContentFull(Schema):
     id: int
     name: str
     description: str
-    video_url: Optional[str]
-    file_attachment: Optional[str]
-    course_id: CourseSchemaOut
-    created_at: datetime
-    updated_at: datetime
+
 
 class CourseCommentOut(Schema):
     id: int
-    content_id: CourseContentMini
-    member_id: CourseMemberOut
+    content_id: int
+    user_id: UserOut
     comment: str
-    created_at: datetime
-    updated_at: datetime
+
 
 class CourseCommentIn(Schema):
     comment: str

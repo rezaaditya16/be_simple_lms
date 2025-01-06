@@ -6,7 +6,6 @@ services:
       - ./code:/code
     ports:
       - "8001:8000"
-    # command: sleep infinity
     command: python manage.py runserver 0.0.0.0:8000
   postgres:
     container_name: prepare_db
