@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from lms_core.views import index, testing, addData, editData, deleteData, register, list_comments, user_activity_dashboard, course_analytics, list_course_contents, enroll_student, batch_enroll, add_completion, show_completion, delete_completion, show_profile, edit_profile
+from lms_core.views import index, testing, addData, editData, deleteData, register, list_comments, user_activity_dashboard, course_analytics, list_course_contents, enroll_student, batch_enroll, add_completion, show_completion, delete_completion, add_category, show_categories, delete_category, show_profile
 from lms_core.api import apiv1  
 from lms_core.admin import admin_site  # Import admin_site yang baru
 
@@ -37,7 +37,9 @@ urlpatterns = [
     path('add_completion/', add_completion, name='add_completion'),
     path('show_completion/<int:course_id>/<int:user_id>/', show_completion, name='show_completion'),
     path('delete_completion/', delete_completion, name='delete_completion'),
+    path('add_category/', add_category, name='add_category'),
+    path('show_categories/', show_categories, name='show_categories'),
+    path('delete_category/', delete_category, name='delete_category'),
     path('profile/<int:user_id>/', show_profile, name='show_profile'),
-    path('edit_profile/', edit_profile, name='edit_profile'),
     path('', index),
 ]

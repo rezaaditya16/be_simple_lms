@@ -1,6 +1,6 @@
 from django.shortcuts import render, HttpResponse, redirect, get_object_or_404
 from django.http import JsonResponse
-from lms_core.models import Course, Comment, CourseContent, ContentCompletion, CourseMember, Profile
+from lms_core.models import Course, Comment, CourseContent, ContentCompletion, CourseMember, Profile, Category
 from django.core import serializers
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
@@ -152,9 +152,9 @@ def show_profile(request, user_id):
         "first_name": user.first_name,
         "last_name": user.last_name,
         "email": user.email,
-        "phone": user.profile.phone,
-        "description": user.profile.description,
-        "profile_picture": user.profile.profile_picture.url if user.profile.profile_picture else None,
+        "phone": user.profile.phone if hasattr(user, 'profile') else None,
+        "description": user.profile.description if hasattr(user, 'profile') else None,
+        "profile_picture": user.profile.profile_picture.url if hasattr(user, 'profile') and user.profile.profile_picture else None,
         "courses_created": serializers.serialize("json", courses_created),
         "courses_enrolled": serializers.serialize("json", courses_enrolled),
     }
@@ -208,3 +208,32 @@ def batch_enroll(request):
     else:
         form = BatchEnrollForm()
     return render(request, 'admin/batch_enroll.html', {'form': form})
+
+@csrf_exempt
+def add_category(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        name = data.get('name')
+        description = data.get('description', '')
+
+        category = Category.objects.create(name=name, description=description)
+        return JsonResponse({"message": "Category created successfully", "category_id": category.id}, status=201)
+
+    return JsonResponse({"error": "Invalid request method"}, status=405)
+
+def show_categories(request):
+    categories = Category.objects.all()
+    data = serializers.serialize("json", categories)
+    return JsonResponse(data, safe=False)
+
+@csrf_exempt
+def delete_category(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        category_id = data.get('category_id')
+
+        category = get_object_or_404(Category, id=category_id)
+        category.delete()
+        return JsonResponse({"message": "Category deleted successfully"}, status=200)
+
+    return JsonResponse({"error": "Invalid request method"}, status=405)

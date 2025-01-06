@@ -1,10 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-# Extend User model to include additional profile fields
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    phone = models.CharField(max_length=15, blank=True, null=True)
+    phone = models.CharField(max_length=20, blank=True, null=True)
     description = models.TextField(blank=True, null=True)
     profile_picture = models.ImageField(upload_to='profile_pictures/', blank=True, null=True)
 
@@ -22,6 +21,15 @@ def create_or_update_user_profile(sender, instance, created, **kwargs):
     else:
         instance.profile.save()
 
+class Category(models.Model):
+    name = models.CharField(max_length=255)
+    description = models.TextField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.name
+
 class Course(models.Model):
     name = models.CharField("Nama", max_length=255)
     description = models.TextField("Deskripsi")
@@ -29,6 +37,7 @@ class Course(models.Model):
     image = models.ImageField("Gambar", upload_to="course", blank=True, null=True)
     teacher = models.ForeignKey(User, verbose_name="Pengajar", on_delete=models.RESTRICT)
     max_students = models.IntegerField("Jumlah Maksimal Siswa", default=30)
+    category = models.ForeignKey(Category, verbose_name="Kategori", on_delete=models.SET_NULL, null=True, blank=True)
     created_at = models.DateTimeField("Dibuat pada", auto_now_add=True)
     updated_at = models.DateTimeField("Diperbarui pada", auto_now=True)
 
@@ -49,6 +58,17 @@ class Course(models.Model):
             'contents_count': CourseContent.objects.filter(course_id=self).count(),
             'comments_count': Comment.objects.filter(content_id__course_id=self).count(),
         }
+
+class Announcement(models.Model):
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    title = models.CharField(max_length=255)
+    content = models.TextField()
+    release_date = models.DateTimeField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.title
 
 ROLE_OPTIONS = [('std', "Siswa"), ('ast', "Asisten")]
 
@@ -89,7 +109,7 @@ class Comment(models.Model):
     comment = models.TextField('komentar')
     is_approved = models.BooleanField('Disetujui', default=False)
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    updated_at = models.DateTimeField(auto_now_add=True)
     
     class Meta:
         verbose_name = "Komentar"
