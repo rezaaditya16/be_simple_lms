@@ -37,7 +37,7 @@ class Course(models.Model):
     image = models.ImageField("Gambar", upload_to="course", blank=True, null=True)
     teacher = models.ForeignKey(User, verbose_name="Pengajar", on_delete=models.RESTRICT)
     max_students = models.IntegerField("Jumlah Maksimal Siswa", default=30)
-    category = models.ForeignKey(Category, verbose_name="Kategori", on_delete=models.SET_NULL, null=True, blank=True)
+    category = models.ForeignKey('Category', verbose_name="Kategori", on_delete=models.SET_NULL, null=True, blank=True)
     created_at = models.DateTimeField("Dibuat pada", auto_now_add=True)
     updated_at = models.DateTimeField("Diperbarui pada", auto_now=True)
 

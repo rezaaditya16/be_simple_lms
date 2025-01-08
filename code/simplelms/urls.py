@@ -18,11 +18,11 @@ from django.contrib import admin
 from django.urls import path, include
 from lms_core.views import index, testing, addData, editData, deleteData, register, list_comments, user_activity_dashboard, course_analytics, list_course_contents, enroll_student, batch_enroll, add_completion, show_completion, delete_completion, add_category, show_categories, delete_category, show_profile
 from lms_core.api import apiv1  
-from lms_core.admin import admin_site  # Import admin_site yang baru
+from lms_core.admin import admin_site 
 
 urlpatterns = [
     path('api/v1/', apiv1.urls),
-    path('admin/', admin_site.urls),  # Gunakan admin_site yang baru
+    path('admin/', admin_site.urls), 
     path('testing/', testing),
     path('tambah/', addData),
     path('ubah/', editData),
